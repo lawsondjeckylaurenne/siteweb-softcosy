@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Soft&Cozy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>SOFT&amp;<span style="color:#00adef">COZY</span></h1>
+    <p>Interface d'administration</p>
+    <input type="password" id="login-password" placeholder="Mot de passe" autocomplete="current-password">
+    <button onclick="login()">Se connecter</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- APP -->
+<div id="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">SOFT&amp;<span>COZY</span></div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" data-section="products" onclick="showSection('products')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        Produits
+      </div>
+      <div class="nav-item" data-section="brands" onclick="showSection('brands')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="9" r="2"/><path d="M21 3l-6 6m0 0L9 15m6-6l-3 3"/><path d="M3 21l6-6m0 0l6-6"/></svg>
+        Marques
+      </div>
+      <div class="nav-item" data-section="categories" onclick="showSection('categories')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        Catégories
+      </div>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="logout()">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Déconnexion
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="topbar">
+      <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <h2 id="section-title">Produits</h2>
+      <div class="topbar-actions">
+        <button id="btn-add-product" class="btn btn-primary" onclick="openProductModal()">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Ajouter un produit
+        </button>
+        <button id="btn-add-brand" class="btn btn-primary" onclick="openBrandModal()" style="display:none">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Ajouter une marque
+        </button>
+        <button id="btn-add-cat" class="btn btn-primary" onclick="openCatModal()" style="display:none">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Ajouter une catégorie
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── PRODUCTS SECTION ── -->
+      <div id="products-section">
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-card"><div class="stat-label">Total produits</div><div class="stat-value" id="stat-total">–</div></div>
+        </div>
+
+        <div class="toolbar">
+          <input class="search-input" type="text" placeholder="Rechercher un produit..." oninput="filterProducts()" id="search-input">
+          <select class="filter-select" onchange="filterProducts()" id="brand-filter">
+            <option value="">Toutes les marques</option>
+          </select>
+          <select class="filter-select" onchange="filterProducts()" id="cat-filter">
+            <option value="">Toutes catégories</option>
+          </select>
+        </div>
+
+        <div class="products-table">
+          <div class="table-header">
+            <div>Photo</div>
+            <div>Produit</div>
+            <div>Marque</div>
+            <div>Prix</div>
+            <div>Actions</div>
+          </div>
+          <div id="products-list">
+            <div class="loading"><div class="spinner"></div>Chargement des produits...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BRANDS SECTION ── -->
+      <div id="brands-section" style="display:none">
+        <div class="products-table items-table">
+          <div class="table-header">
+            <div>Marque</div>
+            <div>Produits</div>
+            <div>Actions</div>
+          </div>
+          <div id="brands-list">
+            <div class="loading"><div class="spinner"></div>Chargement...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CATEGORIES SECTION ── -->
+      <div id="categories-section" style="display:none">
+        <div class="products-table items-table">
+          <div class="table-header">
+            <div>Catégorie</div>
+            <div>Produits</div>
+            <div>Actions</div>
+          </div>
+          <div id="categories-list">
+            <div class="loading"><div class="spinner"></div>Chargement...</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL PRODUIT -->
+<div class="modal-backdrop" id="product-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Ajouter un produit</h3>
+      <button class="modal-close" onclick="closeProductModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nom du produit *</label>
+          <input type="text" id="f-name" placeholder="Ex: Nike Polo Premium – 4 Coloris">
+        </div>
+        <div class="form-group">
+          <label>SKU</label>
+          <input type="text" id="f-sku" placeholder="Généré automatiquement" readonly class="input-readonly">
+        </div>
+        <div class="form-group">
+          <label>Marque</label>
+          <select id="f-brand">
+            <option value="">Choisir...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Prix (FCFA)</label>
+          <input type="number" id="f-price" placeholder="Ex: 14000" min="0">
+        </div>
+        <div class="form-group">
+          <label>Catégorie</label>
+          <select id="f-category"></select>
+          <div class="form-hint">La marque est ajoutée automatiquement aux catégories</div>
+        </div>
+        <div class="form-group">
+          <label>Tailles disponibles</label>
+          <input type="text" id="f-sizes" placeholder="Ex: M, L, XL, 2XL, 3XL">
+          <div class="form-hint">Séparées par des virgules</div>
+        </div>
+        <div class="form-group">
+          <label>Matière</label>
+          <input type="text" id="f-fabric" placeholder="Ex: Performance Fabric">
+        </div>
+        <div class="form-group full">
+          <label>Couleurs disponibles</label>
+          <div class="color-palette" id="color-palette"></div>
+          <div class="selected-colors" id="selected-colors"></div>
+          <div class="form-hint">Cliquez sur une couleur pour l'ajouter • cliquez à nouveau pour la retirer</div>
+        </div>
+        <div class="form-group full">
+          <label>Description</label>
+          <textarea id="f-desc" placeholder="Description du produit..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Photos du produit</label>
+          <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="dragover(event)" ondrop="drop(event)">
+            <div style="font-size:32px">📷</div>
+            <p>Cliquez ou déposez vos photos ici</p>
+            <span>JPG, PNG, WEBP — max 10 MB par photo — max 5 photos</span>
+          </div>
+          <input type="file" id="file-input" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
+          <div class="photos-preview" id="photos-preview"></div>
+          <div class="form-hint" id="upload-status"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeProductModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveProduct()" id="save-btn">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MARQUE -->
+<div class="modal-backdrop" id="brand-modal">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <h3 id="brand-modal-title">Ajouter une marque</h3>
+      <button class="modal-close" onclick="closeBrandModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid" style="grid-template-columns:1fr">
+        <div class="form-group">
+          <label>Nom de la marque *</label>
+          <input type="text" id="b-name" placeholder="Ex: Puma" oninput="autoSlug('b-name','b-slug')">
+        </div>
+        <div class="form-group">
+          <label>Slug (identifiant URL) *</label>
+          <input type="text" id="b-slug" placeholder="Ex: puma">
+          <div class="form-hint">Minuscules, sans espaces ni accents (généré automatiquement)</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeBrandModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveBrand()" id="save-brand-btn">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CATÉGORIE -->
+<div class="modal-backdrop" id="cat-modal">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <h3 id="cat-modal-title">Ajouter une catégorie</h3>
+      <button class="modal-close" onclick="closeCatModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid" style="grid-template-columns:1fr">
+        <div class="form-group">
+          <label>Nom de la catégorie *</label>
+          <input type="text" id="c-name" placeholder="Ex: Shorts" oninput="autoSlug('c-name','c-slug')">
+        </div>
+        <div class="form-group">
+          <label>Slug (identifiant URL) *</label>
+          <input type="text" id="c-slug" placeholder="Ex: shorts">
+          <div class="form-hint">Minuscules, sans espaces ni accents (généré automatiquement)</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeCatModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveCat()" id="save-cat-btn">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div class="confirm-backdrop" id="confirm-modal">
+  <div class="confirm-box">
+    <h4 id="confirm-title">Supprimer ?</h4>
+    <p id="confirm-text">Cette action est irréversible.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="closeConfirm()">Annuler</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

@@ -1004,18 +1004,83 @@ footer .logo {
 }
 
 @media (max-width: 768px) {
+  /* ── HEADER ── */
   header {
-    padding: 0 20px;
+    padding: 0 16px;
+    height: 58px;
+  }
+
+  .logo {
+    font-size: 22px;
+    letter-spacing: 2px;
+  }
+
+  .nav-logo-img {
+    height: 34px;
   }
 
   nav {
     display: none;
   }
 
-  .section {
-    padding: 60px 20px;
+  .cart-btn {
+    padding: 8px 14px;
+    gap: 8px;
+    font-size: 12px;
   }
 
+  /* ── HERO ── */
+  .hero {
+    margin-top: 58px;
+    height: auto;
+    min-height: 320px;
+    padding: 40px 20px;
+  }
+
+  .hero::before {
+    font-size: 90px;
+  }
+
+  .hero p {
+    font-size: 14px;
+    padding: 0 8px;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    padding: 48px 16px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-size: 38px;
+  }
+
+  /* ── FILTRES HORIZONTAUX SCROLLABLES ── */
+  .filters {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+  }
+
+  /* ── MODAL ── */
   .modal {
     grid-template-columns: 1fr;
   }
@@ -1024,13 +1089,30 @@ footer .logo {
     min-height: 250px;
   }
 
+  /* ── PANIER ── */
   .cart-panel {
     width: 100%;
     right: -100%;
   }
 
+  /* ── STATS BAND ── */
   .stats-band {
-    gap: 40px;
+    gap: 20px;
+    padding: 20px 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Très petit écran : masquer le texte "PANIER", garder l'icône */
+@media (max-width: 440px) {
+  .cart-btn-text {
+    display: none;
+  }
+
+  .cart-btn {
+    padding: 8px 12px;
+    gap: 6px;
   }
 }
 
