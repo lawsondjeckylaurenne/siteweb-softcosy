@@ -17,6 +17,25 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // Interface admin
 app.use('/admin', express.static(path.join(__dirname, '../frontend/admin')));
 
+// Sitemap et robots.txt (servis explicitement pour Vercel)
+app.get('/sitemap.xml', (req, res) => {
+  res.setHeader('Content-Type', 'application/xml');
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://siteweb-softcosy.vercel.app/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>`);
+});
+
+app.get('/robots.txt', (req, res) => {
+  res.setHeader('Content-Type', 'text/plain');
+  res.send(`User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: https://siteweb-softcosy.vercel.app/sitemap.xml`);
+});
+
 // Routes API
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products'));
