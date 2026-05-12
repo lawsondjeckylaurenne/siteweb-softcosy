@@ -32,9 +32,17 @@ app.get('/{*path}', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-initDatabase().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Serveur démarré sur http://localhost:${PORT}`);
-    console.log(`Interface admin sur http://localhost:${PORT}/admin`);
+if (require.main === module) {
+  // Lancement direct : node server.js
+  initDatabase().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Serveur démarré sur http://localhost:${PORT}`);
+      console.log(`Interface admin sur http://localhost:${PORT}/admin`);
+    });
   });
-});
+} else {
+  // Vercel serverless : initialise la DB au démarrage du module
+  initDatabase().catch(console.error);
+}
+
+module.exports = app;
