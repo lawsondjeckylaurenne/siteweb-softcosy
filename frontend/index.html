@@ -677,38 +677,39 @@
 
 
       // Build WhatsApp message
-      const _e = {
-        bag: '🛒', note: '📋', cal: '📅',
-        usr: '👤', box: '📦', cash: '💰',
-        card: '💳', pin: '📍', bill: '💵', tel: '📱',
-      };
-
       const payLabel = payment === 'mobile'
-        ? `${_e.tel} Mobile Money${mobileNum ? ' (' + mobileNum + ')' : ''}`
-        : `${_e.bill} Cash à la livraison`;
+        ? `Mobile Money${mobileNum ? ' (' + mobileNum + ')' : ''}`
+        : `Cash a la livraison`;
 
-      const itemLines = cart.map(i =>
-        `• ${i.product.brand} ${i.product.name} (${i.product.sku})\n  Taille: ${i.size} | Couleur: ${colorName(i.color)} | Qté: ${i.qty} | Prix: ${toFCFA(i.product.price * i.qty)}`
-      ).join('\n');
+      const itemLines = cart.map((i, idx) => [
+        `Article ${idx + 1}:`,
+        `  Marque  : ${i.product.brand}`,
+        `  Nom     : ${i.product.name} (${i.product.sku})`,
+        `  Taille  : ${i.size}`,
+        `  Couleur : ${colorName(i.color)}`,
+        `  Qte     : ${i.qty}`,
+        `  Prix    : ${toFCFA(i.product.price * i.qty)}`,
+      ].join('\n')).join('\n\n');
 
       const msg = [
-        `${_e.bag} *NOUVELLE COMMANDE - Soft&Cozy Lomé*`,
-        `${_e.note} N°: ${orderNum}`,
-        `${_e.cal} Date: ${now}`,
+        `*--- NOUVELLE COMMANDE ---*`,
+        `*Soft&Cozy - Lome, Togo*`,
         '',
-        `${_e.usr} *Client:*`,
+        `N: ${orderNum}`,
+        `Date: ${now}`,
+        '',
+        `*CLIENT*`,
         `Nom: ${name}`,
-        `Tél: ${phone}`,
+        `Tel: ${phone}`,
         `Adresse: ${address}`,
         ...(notes ? [`Notes: ${notes}`] : []),
         '',
-        `${_e.box} *Articles:*`,
+        `*ARTICLES*`,
         itemLines,
         '',
-        `${_e.cash} *TOTAL: ${toFCFA(totalAmount)}*`,
-        `${_e.card} Paiement: ${payLabel}`,
-        '',
-        `${_e.pin} Livraison à Lomé, Togo`,
+        `*TOTAL: ${toFCFA(totalAmount)}*`,
+        `Paiement: ${payLabel}`,
+        `Livraison: Lome, Togo`,
       ].join('\n');
 
       const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
