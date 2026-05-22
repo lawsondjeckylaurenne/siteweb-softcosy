@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="UTF-8">
@@ -47,31 +47,31 @@
   <div class="stats-band">
     <div class="stat">
       <div class="stat-number">50+</div>
-      <div class="stat-label">Products</div>
+      <div class="stat-label">Produits</div>
     </div>
     <div class="stat">
       <div class="stat-number">3</div>
-      <div class="stat-label">Top Brands</div>
+      <div class="stat-label">Top Marques</div>
     </div>
     <div class="stat">
       <div class="stat-number">XS–4XL</div>
-      <div class="stat-label">All Sizes</div>
+      <div class="stat-label">Toutes Tailles</div>
     </div>
     <div class="stat">
-      <div class="stat-number">Fast</div>
-      <div class="stat-label">Delivery</div>
+      <div class="stat-number">Rapide</div>
+      <div class="stat-label">Livraison</div>
     </div>
   </div>
 
   <!-- PRODUCTS SECTION -->
   <div class="section" id="all">
     <div class="section-header">
-      <div class="section-title">OUR <span>COLLECTION</span></div>
+      <div class="section-title">NOTRE <span>COLLECTION</span></div>
       <div class="filters">
-        <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
-        <button class="filter-btn" onclick="filterProducts('tops', this)">Tops</button>
-        <button class="filter-btn" onclick="filterProducts('pants', this)">Pants</button>
-        <button class="filter-btn" onclick="filterProducts('sets', this)">Sets</button>
+        <button class="filter-btn active" onclick="filterProducts('all', this)">Tout</button>
+        <button class="filter-btn" onclick="filterProducts('tops', this)">Hauts</button>
+        <button class="filter-btn" onclick="filterProducts('pants', this)">Pantalons</button>
+        <button class="filter-btn" onclick="filterProducts('sets', this)">Ensembles</button>
         <button class="filter-btn" onclick="filterProducts('nike', this)">Nike</button>
         <button class="filter-btn" onclick="filterProducts('adidas', this)">Adidas</button>
         <button class="filter-btn" onclick="filterProducts('ua', this)">Under Armour</button>
@@ -141,7 +141,7 @@
   <!-- CART PANEL -->
   <div class="cart-panel" id="cartPanel">
     <div class="cart-header">
-      <div class="cart-title">YOUR CART</div>
+      <div class="cart-title">VOTRE PANIER</div>
       <button onclick="closeCart()"
         style="background:none;border:none;color:var(--text-muted);font-size:24px;cursor:pointer">✕</button>
     </div>
@@ -155,46 +155,40 @@
             <div class="cart-total-label">Total</div>
             <div class="cart-total-amount" id="cartTotal">0 FCFA</div>
           </div>
-          <button class="checkout-btn" onclick="showOrderForm()">PROCEED TO ORDER →</button>
+          <button class="checkout-btn" onclick="showOrderForm()">PASSER LA COMMANDE →</button>
         </div>
 
         <div class="order-form" id="orderForm">
-          <button class="back-btn" onclick="hideOrderForm()">← Back to Cart</button>
+          <button class="back-btn" onclick="hideOrderForm()">← Retour au panier</button>
           <div class="form-group">
-            <label>Full Name *</label>
-            <input type="text" id="fname" placeholder="Your full name" required>
+            <label>Nom complet *</label>
+            <input type="text" id="fname" placeholder="Votre nom complet" required>
           </div>
           <div class="form-group">
-            <label>Phone Number *</label>
-            <input type="tel" id="fphone" placeholder="+1 (555) 000-0000" required>
+            <label>Numéro de téléphone *</label>
+            <input type="tel" id="fphone" placeholder="Ex: 90 00 00 00" required>
           </div>
           <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="femail" placeholder="your@email.com">
+            <label>Adresse de livraison *</label>
+            <textarea id="faddress" placeholder="Quartier, Ville, Pays" required></textarea>
           </div>
           <div class="form-group">
-            <label>Delivery Address *</label>
-            <textarea id="faddress" placeholder="Street, City, Country, ZIP" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>Payment Method</label>
+            <label>Mode de paiement</label>
             <select id="fpayment">
-              <option value="cash">💵 Cash on Delivery (Paiement à la livraison)</option>
-              <option value="mobile">📱 Mobile Money (Flooz / T-Money)</option>
+              <option value="cash">Paiement à la livraison (Cash)</option>
+              <option value="mobile">Mobile Money (Flooz / T-Money)</option>
             </select>
           </div>
           <div class="form-group" id="mobileMoneyInfo" style="display:none">
-            <label>Mobile Money Number</label>
+            <label>Numéro Mobile Money</label>
             <input type="tel" id="fmobilenumber" placeholder="Ex: 90 00 00 00">
-            <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Flooz (Moov) ou T-Money (Togocel)
-              acceptés
-            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Flooz (Moov) ou T-Money (Togocel) acceptés</div>
           </div>
           <div class="form-group">
             <label>Notes</label>
-            <textarea id="fnotes" placeholder="Any special requests..."></textarea>
+            <textarea id="fnotes" placeholder="Remarques particulières..."></textarea>
           </div>
-          <button class="checkout-btn" onclick="submitOrder()">✓ CONFIRM ORDER</button>
+          <button class="checkout-btn" onclick="submitOrder()">CONFIRMER LA COMMANDE</button>
         </div>
 
         <div class="order-success" id="orderSuccess">
