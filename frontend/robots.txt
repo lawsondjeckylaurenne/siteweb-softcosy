@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
 
 Sitemap: https://siteweb-softcosy.vercel.app/sitemap.xml

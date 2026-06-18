@@ -33,8 +33,8 @@
   <!-- HERO -->
   <div class="hero">
     <div class="hero-content">
-      <div class="hero-tag">🔥 Nouvelle Collection 2026 – Lomé, Togo</div>
-      <h1>DÉPASSE<br><em>TES LIMITES.</em></h1>
+      <div class="hero-tag"> Nouvelle Collection 2026 – Lomé, Togo</div>
+      <h1>DÉPASSE<br><em>TES LIMITES</em></h1>
       <p>Vêtements de sport premium — Nike, Adidas, Under Armour. Livraison partout. Paiement Cash ou Mobile Money.</p>
       <div class="hero-cta">
         <button class="btn-primary" onclick="scrollToSection('all')">Commander Maintenant</button>
@@ -69,12 +69,12 @@
       <div class="section-title">NOTRE <span>COLLECTION</span></div>
       <div class="filters">
         <button class="filter-btn active" onclick="filterProducts('all', this)">Tout</button>
-        <button class="filter-btn" onclick="filterProducts('tops', this)">Hauts</button>
-        <button class="filter-btn" onclick="filterProducts('pants', this)">Pantalons</button>
-        <button class="filter-btn" onclick="filterProducts('sets', this)">Ensembles</button>
+        <button class="filter-btn" onclick="filterProducts('hauts', this)">Hauts</button>
+        <button class="filter-btn" onclick="filterProducts('pantalons', this)">Pantalons</button>
+        <button class="filter-btn" onclick="filterProducts('ensembles', this)">Ensembles</button>
         <button class="filter-btn" onclick="filterProducts('nike', this)">Nike</button>
         <button class="filter-btn" onclick="filterProducts('adidas', this)">Adidas</button>
-        <button class="filter-btn" onclick="filterProducts('ua', this)">Under Armour</button>
+        <button class="filter-btn" onclick="filterProducts('under armour', this)">Under Armour</button>
       </div>
     </div>
     <div class="products-grid" id="productsGrid"></div>
@@ -211,6 +211,8 @@
     // 🔧 REPLACE WITH YOUR WHATSAPP NUMBER (with country code, no + or spaces)
     const WHATSAPP_NUMBER = '22892409878'; // ← Mets ton numéro ici ex: 22890123456
 
+    const API_PRODUITS_URL = 'https://softcosy-backend.onrender.com/api/site/products/?page_size=100';
+
     function toFCFA(price) {
       return (price || 0).toLocaleString('fr-FR') + ' FCFA';
     }
@@ -305,7 +307,15 @@
     // ============ RENDER PRODUCTS ============
     function renderProducts(filter = 'all') {
       const grid = document.getElementById('productsGrid');
-      const filtered = filter === 'all' ? products : products.filter(p => p.category.includes(filter));
+      const filtered = filter === 'all'
+        ? products
+        : products.filter(p => {
+            // Vérifier la catégorie (tableau de chaînes depuis Django)
+            if (p.category && p.category.some(c => c.toLowerCase().includes(filter.toLowerCase()))) return true;
+            // Vérifier la marque (champ séparé dans Django, était dans category dans Express)
+            if (p.brand && p.brand.toLowerCase().includes(filter.toLowerCase())) return true;
+            return false;
+          });
       grid.innerHTML = filtered.map(p => {
         const imgs = p.images.filter(Boolean);
         const hasImgs = imgs.length > 0;
@@ -737,18 +747,21 @@
     // ============ INIT ============
     async function loadAndRender() {
       try {
-        const res = await fetch('/api/products');
+        const res = await fetch(API_PRODUITS_URL);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
-        products = data.map(p => ({
+        // L'API Django retourne un objet paginé { count, next, previous, results: [...] }
+        const rawProducts = Array.isArray(data) ? data : (data.results || []);
+        products = rawProducts.map(p => ({
           ...p,
           desc: p.description || p.desc || '',
           icon: p.icon || '👕',
           badge: p.badge || '',
+          // Django retourne déjà des tableaux — Array.isArray() gère les deux formats
           category: Array.isArray(p.category) ? p.category : JSON.parse(p.category || '[]'),
-          sizes: Array.isArray(p.sizes) ? p.sizes : JSON.parse(p.sizes || '[]'),
-          colors: Array.isArray(p.colors) ? p.colors : JSON.parse(p.colors || '[]'),
-          images: Array.isArray(p.images) ? p.images : JSON.parse(p.images || '[]'),
+          sizes:    Array.isArray(p.sizes)    ? p.sizes    : JSON.parse(p.sizes    || '[]'),
+          colors:   Array.isArray(p.colors)   ? p.colors   : JSON.parse(p.colors   || '[]'),
+          images:   Array.isArray(p.images)   ? p.images   : JSON.parse(p.images   || '[]'),
         }));
         renderProducts();
       } catch (err) {
